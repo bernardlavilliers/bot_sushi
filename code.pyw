@@ -3,11 +3,31 @@ import os
 import sys
 import time
 import win32api, win32con
+import pyautogui
 from PIL import ImageGrab,ImageOps
 from numpy import *
+import pdb
+import logging
+import time
+import random
+import copy
 
-x_pad = 464
-y_pad = 226
+
+
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.debug('This is a log message.')
+
+x_pad = 0
+y_pad = 0
+def locateGame():
+    im = ImageGrab.grab()
+    try:
+        (x,y,w,h) = pyautogui.locateOnScreen('upperleftcorner.png')
+    except pyautogui.pyscreeze.ImageNotFoundException :
+        (x,y,w,h) = pyautogui.locateOnScreen('upperleftcorner2.png')
+    print(x,y,file=sys.stderr)
+
+    return (x-1,y-1)
 
 foodOnHand = {'shrimp':5,
               'rice':10,
@@ -65,6 +85,7 @@ def leftUp():
     print('left release',file=sys.stderr)
 
 def mousePos(cord):
+    print(x_pad,y_pad,file=sys.stderr)
     win32api.SetCursorPos((x_pad + cord[0], y_pad + cord[1]))
 
 def get_cords():
@@ -275,7 +296,9 @@ def checkFood():
                 buyFood(i)
 
 def main():
-	pass
+    startGame()
 
 if __name__ == "__main__":
-	main()
+    x_pad,y_pad = locateGame()
+    print(x_pad,y_pad,"main passedaa")
+    main()
